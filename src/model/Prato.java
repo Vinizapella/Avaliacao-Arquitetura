@@ -3,8 +3,11 @@ package model;
 public class Prato {
 
     private int id;
+
     private String nome;
+
     private double precos;
+
     private int estoque;
 
     public Prato(int id, String nome, double precos, int estoque) {

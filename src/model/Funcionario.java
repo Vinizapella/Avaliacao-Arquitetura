@@ -3,8 +3,11 @@ package model;
 public class Funcionario {
 
     private int id;
+
     private String nome;
+
     private String cargos;
+
     private double salarios;
 
     public Funcionario(String nome, String cargos, double salarios) {

@@ -1,3 +1,4 @@
+import estoque.EstoqueService;
 import financeiro.*;
 import model.Funcionario;
 import model.Prato;
@@ -102,11 +103,11 @@ public class App {
 
                     int qtd = scanner.nextInt();
 
-                    System.out.print("1-Presencial / 2-Delivery: ");
+                    System.out.print("1-Presencial | 2-Delivery: ");
 
                     boolean isDel = scanner.nextInt() == 2;
 
-                    System.out.println("Pagamento: 1-Pix | 2-Débito | 3-Crédito | 4-Espécie");
+                    System.out.println("Pagamento: 1-Pix | 2-Débito | 3-Crédito | 4-Espécie ");
 
                     int tipoPagamento = scanner.nextInt();
 
@@ -142,6 +143,79 @@ public class App {
 
                     break;
 
+                case 4:
+
+                    for (int i = 0; i < cardapio.size(); i++){
+
+                        Prato pratoEstoque = cardapio.get(i);
+
+                        System.out.println(i + ": " + pratoEstoque.getNome() + " | Quantidade: " + pratoEstoque.getEstoque());
+
+                    }
+
+                    System.out.println("Indice do prato: ");
+
+                    int indiceEntrada = scanner.nextInt();
+
+                    System.out.println("Quantidade para somar: ");
+
+                    int quantidadeAdicionar = scanner.nextInt();
+
+                    controleEstoque.registrarEntradaEstoque(cardapio.get(indiceEntrada), quantidadeAdicionar);
+                    
+                    System.out.println("Estoque atualizado.");
+                    
+                    break;
+                    
+                case 5:
+
+                    System.out.print("Indice do prato: ");
+
+                    int indiceVenda = scanner.nextInt();
+
+                    System.out.print("Quantidade: ");
+
+                    int quantidadeVenda = scanner.nextInt();
+
+                    System.out.print("1-Presencial | 2-Delivery: ");
+
+                    boolean ehDelivery = (scanner.nextInt() == 2);
+
+                    System.out.println("Pagamento: 1-Credito | 2-Debito | 3-PIX | 4-Especie");
+
+                    int opcaoPagamento = scanner.nextInt();
+
+                    IPagamentos metodos = (IPagamentos) switch(opcaoPagamento) {
+
+                        case 1 -> new Pix();
+
+                        case 2 -> new Debito();
+
+                        case 3 -> new Credito();
+
+                        case 4 -> new Especie();
+
+                        default -> new Exception("Método de Pagamento Indisponível");
+
+                    };
+
+                    VendaService vendaService = new VendaService(metodos);
+
+                    try {
+
+                        double valorVenda = vendaService.realizarProcessamentoVenda(cardapio.get(indiceVenda), quantidadeVenda, ehDelivery);
+
+                        faturamentoTotal += valorVenda;
+
+                        System.out.println("Venda Finalizada! Total: R$ " + valorVenda);
+
+                    }catch (RuntimeException execao){
+
+                        System.out.println("ERRO: " + execao.getMessage());
+
+                    }
+
+                    break;
             }
 
         }
